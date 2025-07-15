@@ -5,6 +5,7 @@ description = "Up&Up Collections"
 authors = [
     {name = "Jocelyn Thai",email = "jocelyn.thai@upandup.co"}
 ]
+package-mode = false
 readme = "README.md"
 requires-python = "^3.11"
 dependencies = [
@@ -14,7 +15,6 @@ dependencies = [
     "google-cloud-bigquery (>=3.34.0,<4.0.0)",
     "pandas-gbq (>=0.29.2,<0.30.0)"
 ]
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
