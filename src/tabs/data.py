@@ -20,8 +20,3 @@ def get_collections_curve_data(_credentials):
                         FROM `homevest-data.dbt_kyanscienceman_tin.rent_collections_curve`", credentials=_credentials)
     return collections_curve_data
 
-@st.cache_data
-def get_expected_bad_debt_data(_credentials):
-    expected_bad_debt_data = pd.read_gbq(f"SELECT * \
-                        FROM `homevest-data.dbt_kyanscienceman_tin.bad_debt_forecast`", credentials=_credentials)
-    return expected_bad_debt_data
