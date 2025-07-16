@@ -5,8 +5,22 @@ from datetime import datetime
 from tabs.utils import date_month_filter, fund_filter, color_scale, dash_scale
 
 def late_collections_curve_filters(collections_curve_data):
-    selected_fund = fund_filter(key='late_collections_curve_select_fund', data=collections_curve_data)
+    # Make the fund filter column wider than the others
+    col_fund_filter, col_month, col_bom_rent_balance, col_num_rentals, col_num_rentals_in_evictions = st.columns([2, 1, 1, 1, 1])
+    with col_fund_filter:
+        selected_fund = fund_filter(key='late_collections_curve_select_fund', data=collections_curve_data)
+
+    datapoint = collections_curve_data[collections_curve_data['fund'] == selected_fund].iloc[-1]
+    with col_month:
+        st.markdown(f"<div style='text-align: center; font-size: 24px;'><strong>{datetime.now().strftime('%B')}<br>{datetime.now().strftime('%Y')}</strong></div>", unsafe_allow_html=True)
+    with col_bom_rent_balance:
+        st.metric("BOM AR", f"${datapoint['bom_rent_balance_this_month']:,.0f}")
+    with col_num_rentals:
+        st.metric("Homes with BOM AR", f"{datapoint['homes_with_bom_rent_balance_this_month']:,}")
+    with col_num_rentals_in_evictions:
+        st.metric("Homes in Evictions With BOM AR", f"{datapoint['homes_with_bom_rent_balance_in_evictions_this_month']:,}")
     return selected_fund
+
 
 def late_collections_curve(collections_curve_data, selected_fund):
     st.subheader("Late Collections Curve")
@@ -15,7 +29,7 @@ def late_collections_curve(collections_curve_data, selected_fund):
 
     # Melt to long format for Altair
     chart_df = display_df.melt(
-        id_vars=['day_of_month'],
+        id_vars=['day_of_month', 'rent_paid_late_this_month', 'rent_succeeded_late_this_month'],
         value_vars=[
             'late_collections_rate_succeeded_this_month',
             'late_collections_rate_this_month',
@@ -67,9 +81,15 @@ def late_collections_curve(collections_curve_data, selected_fund):
         x=alt.X('day_of_month:O'),
         y=alt.Y('ratio:Q'),
         color=alt.Color('curve:N', scale=color_scale, legend=None),
-        tooltip=['day_of_month', 'curve', alt.Tooltip('ratio:Q', format='.2%')]
+        tooltip=[
+            'day_of_month', 
+            'curve', 
+            alt.Tooltip('ratio:Q', format='.2%'),
+            alt.Tooltip('rent_paid_late_this_month:Q', format='$,.0f', title='Rent Paid Late'),
+            alt.Tooltip('rent_succeeded_late_this_month:Q', format='$,.0f', title='Rent Succeeded Late')
+        ]
     )
-
+    
     st.altair_chart(chart + point_chart, use_container_width=True)
 
 def late_collections_drilldown(bad_debt_inputs, selected_fund):

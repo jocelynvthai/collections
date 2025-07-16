@@ -57,7 +57,13 @@ def late_collections_over_ar(bad_debt_inputs, selected_month_year):
         x=alt.X('month:T', axis=alt.Axis(format='%b %Y', title='Month', labelFlush=False)),
         y=alt.Y('late_collections_ratio:Q', title='Late Collections Ratio', 
         axis=alt.Axis(format='.1%')), 
-        color=alt.value('#15b8a6')
+        color=alt.value('#15b8a6'),
+        tooltip=[
+            alt.Tooltip('month:T', title='Month', format='%b %Y'),
+            alt.Tooltip('late_rent_collections:Q', title='Late Collections', format='$,.0f'),
+            alt.Tooltip('bom_rent_balance:Q', title='BOM AR', format='$,.0f'),
+            alt.Tooltip('late_collections_ratio:Q', title='Late Collections Ratio', format='.1%')
+        ]
     )
     st.altair_chart(chart, use_container_width=True)
 

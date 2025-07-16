@@ -6,8 +6,20 @@ from tabs.utils import date_month_filter, fund_filter, color_scale, dash_scale
 
 
 def ontime_collections_curve_filters(collections_curve_data):
-    selected_fund = fund_filter(key='ontime_collections_curve_select_fund', data=collections_curve_data)
+    col_fund_filter, col_month, col_rent_charged = st.columns([2, 1, 1])
+    with col_fund_filter:
+        selected_fund = fund_filter(key='ontime_collections_curve_select_fund', data=collections_curve_data)
+    
+
+    datapoint = collections_curve_data[collections_curve_data['fund'] == selected_fund].sort_values(by='day_of_month').iloc[-1]
+    with col_month:
+        st.markdown(f"<div style='text-align: center; font-size: 24px;'><strong>{datetime.now().strftime('%B')}<br>{datetime.now().strftime('%Y')}</strong></div>", unsafe_allow_html=True)
+    with col_rent_charged:
+        st.metric("Rent Charged", f"${datapoint['rent_charged_this_month']:,.0f}")
+
     return selected_fund
+
+
     
 
 def ontime_collections_curve(collections_curve_data, selected_fund):
@@ -17,7 +29,7 @@ def ontime_collections_curve(collections_curve_data, selected_fund):
 
     # Melt to long format for Altair
     chart_df = display_df.melt(
-        id_vars=['day_of_month'],
+        id_vars=['day_of_month', 'rent_charged_this_month', 'rent_paid_ontime_this_month', 'rent_succeeded_ontime_this_month'],  
         value_vars=[
             'ontime_collections_rate_succeeded_this_month',
             'ontime_collections_rate_this_month',
@@ -56,7 +68,11 @@ def ontime_collections_curve(collections_curve_data, selected_fund):
             legend=alt.Legend(orient='right')
         ),
         strokeDash=alt.StrokeDash('curve:N', scale=dash_scale),
-        tooltip=['day_of_month', 'curve', alt.Tooltip('ratio:Q', format='.2%')]
+        tooltip=[
+            'day_of_month', 
+            'curve', 
+            alt.Tooltip('ratio:Q', format='.2%')
+        ]
     ).properties(
         width='container',
         height=400
@@ -70,7 +86,13 @@ def ontime_collections_curve(collections_curve_data, selected_fund):
         x=alt.X('day_of_month:O'),
         y=alt.Y('ratio:Q'),
         color=alt.Color('curve:N', scale=color_scale, legend=None),
-        tooltip=['day_of_month', 'curve', alt.Tooltip('ratio:Q', format='.2%')]
+        tooltip=[
+            'day_of_month', 
+            'curve', 
+            alt.Tooltip('ratio:Q', format='.2%'),
+            alt.Tooltip('rent_paid_ontime_this_month:Q', format='$,.0f', title='Rent Paid On Time'),
+            alt.Tooltip('rent_succeeded_ontime_this_month:Q', format='$,.0f', title='Rent Succeeded On Time')
+        ]
     )
 
     st.altair_chart(chart + point_chart, use_container_width=True)

@@ -1,11 +1,11 @@
 import streamlit as st
 from google.oauth2 import service_account
 
-from tabs.data import get_bad_debt_inputs_data, get_collections_curve_data
+from tabs.data import get_bad_debt_inputs_data, get_collections_curve_data, get_expected_bad_debt_data
 from tabs.data_tab import data_filters, late_collections_over_ar, ar_over_gpr
 from tabs.ontime_collections_tab import ontime_collections_curve_filters, ontime_collections_curve, ontime_collections_drilldown
 from tabs.late_collections_tab import late_collections_curve_filters, late_collections_curve, late_collections_drilldown
-from tabs.bad_debt_tab import bad_debt_projection
+from tabs.bad_debt_tab import bad_debt_over_time_filters, bad_debt_over_time, bad_debt_projection
 
 # Configure page layout
 st.set_page_config(
@@ -22,6 +22,7 @@ credentials = service_account.Credentials.from_service_account_info(
 
 bad_debt_inputs = get_bad_debt_inputs_data(credentials)
 collections_curve_data = get_collections_curve_data(credentials)
+expected_bad_debt_data = get_expected_bad_debt_data(credentials)
 
 st.title("Collections Dashboard")
 data, ontime_collections, late_collections, bad_debt = st.tabs(["Data", "On-Time Collections", "Late Collections", "Bad Debt"])
@@ -41,5 +42,8 @@ with late_collections:
     late_collections_drilldown(bad_debt_inputs, late_collections_selected_fund)
 
 with bad_debt:
-    bad_debt_projection()
+    bad_debt_selected_fund = bad_debt_over_time_filters(bad_debt_inputs)
+    bad_debt_over_time(bad_debt_inputs, bad_debt_selected_fund)
+    bad_debt_projection(bad_debt_inputs, bad_debt_selected_fund)
+    
 
