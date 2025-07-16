@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Up&Up Collections"
 authors = ["Jocelyn Thai <jocelynvthai@berkeley.edu>"]
 readme = "README.md"
+package-mode = false
 
 
 [tool.poetry.dependencies]
