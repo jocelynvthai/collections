@@ -5,6 +5,7 @@ description = "Up&Up Collections"
 authors = ["Jocelyn Thai <jocelynvthai@berkeley.edu>"]
 readme = "README.md"
 
+
 [tool.poetry.dependencies]
 python = "^3.11"
 streamlit = ">=1.46.1,<2.0.0"

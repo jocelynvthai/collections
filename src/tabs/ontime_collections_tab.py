@@ -6,10 +6,8 @@ from tabs.utils import date_month_filter, fund_filter, color_scale, dash_scale
 
 
 def ontime_collections_curve_filters(collections_curve_data):
-    col_month, col_rent_charged, _, col_fund_filter = st.columns([1, 1, 3, 1])
-    with col_fund_filter:
-        selected_fund = fund_filter(key='ontime_collections_curve_select_fund', data=collections_curve_data)
-    
+    selected_fund = fund_filter(key='ontime_collections_curve_select_fund', data=collections_curve_data)
+    col_month, col_rent_charged, _ = st.columns([1, 1, 4])
 
     datapoint = collections_curve_data[collections_curve_data['fund'] == selected_fund].sort_values(by='day_of_month').iloc[-1]
     with col_month:

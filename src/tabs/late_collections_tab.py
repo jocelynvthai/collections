@@ -5,10 +5,8 @@ from datetime import datetime
 from tabs.utils import date_month_filter, fund_filter, color_scale, dash_scale
 
 def late_collections_curve_filters(collections_curve_data):
-    # Make the fund filter column wider than the others
-    col_month, col_bom_rent_balance, col_num_rentals, col_num_rentals_in_evictions, _, col_fund_filter = st.columns([1, 1, 1, 1, 1, 1])
-    with col_fund_filter:
-        selected_fund = fund_filter(key='late_collections_curve_select_fund', data=collections_curve_data)
+    selected_fund = fund_filter(key='late_collections_curve_select_fund', data=collections_curve_data)
+    col_month, col_bom_rent_balance, col_num_rentals, col_num_rentals_in_evictions, _ = st.columns([1, 1, 1, 1, 2])
 
     datapoint = collections_curve_data[collections_curve_data['fund'] == selected_fund].iloc[-1]
     with col_month:
