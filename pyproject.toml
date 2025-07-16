@@ -2,7 +2,7 @@
 name = "collections"
 version = "0.1.0"
 description = "Up&Up Collections"
-authors = ["Jocelyn Thai <jocelyn.thai@upandup.co>"]
+authors = ["Jocelyn Thai <jocelynvthai@berkeley.edu>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
