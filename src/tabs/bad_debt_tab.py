@@ -82,7 +82,12 @@ def bad_debt_projection(bad_debt_inputs, selected_fund):
     # New bad debt with OCR slider
     col_new, col_ocr = st.columns([0.5, 1])
     with col_ocr:
-        selected_ocr = st.slider("Expected Ontime Collections Rate (OCR) %", min_value=0, max_value=100, value=96, step=1)
+        selected_ocr = st.slider("Expected Ontime Collections Rate (OCR) %", 
+                                 min_value=int(today_ocr * 100), 
+                                 max_value=100, 
+                                 value=96, 
+                                 step=1, 
+                                 help=f'Minimum value is set to current month\'s LCR: {today_lcr:.1%}')
         expected_ocr = selected_ocr/100
 
     # Old bad debt recovery with LCR slider
