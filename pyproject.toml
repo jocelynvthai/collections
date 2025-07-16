@@ -1,11 +1,11 @@
 [project]
 name = "collections"
 version = "0.1.0"
+package-mode = false
 description = "Up&Up Collections"
 authors = [
     {name = "Jocelyn Thai",email = "jocelyn.thai@upandup.co"}
 ]
-package-mode = false
 readme = "README.md"
 requires-python = "^3.11"
 dependencies = [
