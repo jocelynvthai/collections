@@ -66,7 +66,6 @@ def bad_debt_over_time(bad_debt_inputs, selected_fund):
             alt.Tooltip('bad_debt_ratio_percent:Q', title='Bad Debt Ratio (%)', format='.2f'),
         ]
     ).properties(
-        title=f'Bad Debt Ratio for Fund: {selected_fund}',
         width=600
     )
 

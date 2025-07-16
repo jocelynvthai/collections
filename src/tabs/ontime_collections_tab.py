@@ -6,14 +6,14 @@ from tabs.utils import date_month_filter, fund_filter, color_scale, dash_scale
 
 
 def ontime_collections_curve_filters(collections_curve_data):
-    col_fund_filter, col_month, col_rent_charged = st.columns([2, 1, 1])
+    col_month, col_rent_charged, _, col_fund_filter = st.columns([1, 1, 3, 1])
     with col_fund_filter:
         selected_fund = fund_filter(key='ontime_collections_curve_select_fund', data=collections_curve_data)
     
 
     datapoint = collections_curve_data[collections_curve_data['fund'] == selected_fund].sort_values(by='day_of_month').iloc[-1]
     with col_month:
-        st.markdown(f"<div style='text-align: center; font-size: 24px;'><strong>{datetime.now().strftime('%B')}<br>{datetime.now().strftime('%Y')}</strong></div>", unsafe_allow_html=True)
+        st.metric(f"{datetime.now().strftime('%Y')}", f"{datetime.now().strftime('%B')}")
     with col_rent_charged:
         st.metric("Rent Charged", f"${datapoint['rent_charged_this_month']:,.0f}")
 

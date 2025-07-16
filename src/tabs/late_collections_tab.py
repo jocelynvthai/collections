@@ -6,13 +6,13 @@ from tabs.utils import date_month_filter, fund_filter, color_scale, dash_scale
 
 def late_collections_curve_filters(collections_curve_data):
     # Make the fund filter column wider than the others
-    col_fund_filter, col_month, col_bom_rent_balance, col_num_rentals, col_num_rentals_in_evictions = st.columns([2, 1, 1, 1, 1])
+    col_month, col_bom_rent_balance, col_num_rentals, col_num_rentals_in_evictions, _, col_fund_filter = st.columns([1, 1, 1, 1, 1, 1])
     with col_fund_filter:
         selected_fund = fund_filter(key='late_collections_curve_select_fund', data=collections_curve_data)
 
     datapoint = collections_curve_data[collections_curve_data['fund'] == selected_fund].iloc[-1]
     with col_month:
-        st.markdown(f"<div style='text-align: center; font-size: 24px;'><strong>{datetime.now().strftime('%B')}<br>{datetime.now().strftime('%Y')}</strong></div>", unsafe_allow_html=True)
+        st.metric(f"{datetime.now().strftime('%Y')}", f"{datetime.now().strftime('%B')}")
     with col_bom_rent_balance:
         st.metric("BOM AR", f"${datapoint['bom_rent_balance_this_month']:,.0f}")
     with col_num_rentals:
