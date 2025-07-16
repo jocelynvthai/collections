@@ -77,6 +77,9 @@ def bad_debt_projection(bad_debt_inputs, selected_fund):
     st.subheader("Bad Debt Projection")
     bad_debt_fund_inputs = bad_debt_inputs[(bad_debt_inputs['fund'] == selected_fund) & (bad_debt_inputs['month'] == datetime.now().strftime('%Y-%m-01'))]
 
+    today_ocr = bad_debt_fund_inputs['ontime_rent_collections'].sum() / bad_debt_fund_inputs['rent_charged'].sum()
+    today_lcr = 0 if bad_debt_fund_inputs['bom_rent_balance'].sum() == 0 else bad_debt_fund_inputs['late_rent_collections'].sum() / bad_debt_fund_inputs['bom_rent_balance'].sum()
+
     # New bad debt with OCR slider
     col_new, col_ocr = st.columns([0.5, 1])
     with col_ocr:
@@ -86,28 +89,32 @@ def bad_debt_projection(bad_debt_inputs, selected_fund):
     # Old bad debt recovery with LCR slider
     col_old, col_lcr = st.columns([0.5, 1])
     with col_lcr:
-        selected_lcr = st.slider("Expected Late Collections Rate (LCR) %", min_value=0, max_value=100, value=25, step=1)
+        selected_lcr = st.slider(
+            "Expected Late Collections Rate (LCR) %",
+            min_value=int(today_lcr * 100), 
+            max_value=100,
+            value=max(25, int(today_lcr * 100)),
+            step=1, 
+            help=f'Minimum value is set to current month\'s LCR: {today_lcr:.1%}'
+        )
         expected_lcr = selected_lcr/100
+        
 
     # Calculate all projections
-    today_OCR = bad_debt_fund_inputs['ontime_rent_collections'].sum() / bad_debt_fund_inputs['rent_charged'].sum()
     total_expected_bad_debt_increase = 0
-
     unpaid_rentals = bad_debt_fund_inputs[bad_debt_fund_inputs['ontime_rent_collections'] < bad_debt_fund_inputs['rent_charged']]
     for _, ur in unpaid_rentals.iterrows(): 
         amount_unpaid = ur['rent_charged'] - ur['ontime_rent_collections']
-        expected_collections_pct = (expected_ocr - today_OCR) / (1 - today_OCR)
+        expected_collections_pct = (expected_ocr - today_ocr) / (1 - today_ocr)
         expected_unpaid = amount_unpaid * (1 - expected_collections_pct)
         expected_bad_debt_increase = max(0, expected_unpaid - ur['bom_usable_wallet_or_deposit'])
         total_expected_bad_debt_increase += expected_bad_debt_increase
 
-    today_LCR = bad_debt_fund_inputs['late_rent_collections'].sum() / bad_debt_fund_inputs['bom_rent_balance'].sum()
     total_expected_bad_debt_decrease = 0
-
     late_rentals = bad_debt_fund_inputs[bad_debt_fund_inputs['bom_rent_balance'] > 0]
     for _, lr in late_rentals.iterrows():	
         remaining_bom_balance = lr['bom_rent_balance'] - lr['late_rent_collections']
-        expected_collections_pct = (expected_lcr - today_LCR) / (1 - today_LCR)
+        expected_collections_pct = (expected_lcr - today_lcr) / (1 - today_lcr)
         expected_late_collections = remaining_bom_balance * expected_collections_pct
         expected_bad_debt_decrease = min(lr['bom_bad_debt_rent'], expected_late_collections)
         total_expected_bad_debt_decrease += expected_bad_debt_decrease
@@ -125,10 +132,9 @@ def bad_debt_projection(bad_debt_inputs, selected_fund):
     st.metric(
         label=f"Net Bad Debt Projection ({datetime.now().strftime('%B %Y')})",
         value=f"{net_projection_pct:.2f}%",
-        help="""The overall expected bad debt position as a percentage of rent charged.
-        
-A negative percentage indicates net recovery (good)
-A positive percentage indicates net increase in bad debt (bad)"""
+        help="""The overall expected bad debt position as a percentage of rent charged. \n
+- A negative percentage indicates net recovery (good) 
+- A positive percentage indicates net increase in bad debt (bad)"""
     )
 
     # 2. New bad debt metric
