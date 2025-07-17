@@ -4,29 +4,28 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 
+from tabs.utils import fund_filter
+
 def bad_debt_over_time_filters(bad_debt_inputs):
-    selected_fund = st.selectbox("Select Fund", bad_debt_inputs['fund'].unique())
+    selected_fund = fund_filter(key='bad_debt_over_time_select_fund', data=bad_debt_inputs)
     return selected_fund
 
 def bad_debt_over_time(bad_debt_inputs, selected_fund):
     st.subheader("Bad Debt Over Time")
 
     bad_debt = bad_debt_inputs[bad_debt_inputs['fund'] == selected_fund].copy()
-    # Calculate bad_debt as a new column, element-wise
+
     bad_debt['bad_debt'] = np.maximum(
         bad_debt['unpaid_rent_this_month']
         - bad_debt['unpaid_rent_covered_by_wallet']
         - bad_debt['bom_bad_debt_recovered_by_late_collections'], 0
     )
 
-    # Group by fund and month, aggregate sums
     bad_debt_fund = (
         bad_debt.groupby(['fund', 'month'])
-        .agg({'bad_debt': 'sum', 'rent_charged': 'sum'})
+        .agg({'bad_debt': 'sum', 'rent_charged': 'sum', 'unpaid_rent_this_month': 'sum', 'unpaid_rent_covered_by_wallet': 'sum', 'bom_bad_debt_recovered_by_late_collections': 'sum'})
         .reset_index()
     )
-
-    # Calculate the ratio
     bad_debt_fund['bad_debt_ratio_percent'] = bad_debt_fund['bad_debt'] * 100 / bad_debt_fund['rent_charged']
 
     # Set 'month' to the 15th of each month for centering
@@ -37,15 +36,17 @@ def bad_debt_over_time(bad_debt_inputs, selected_fund):
         + pd.Timedelta(days=7)
     )
 
-
     # Create a list of months for the domain (15th of each month)
     all_months = pd.date_range(
         start=(bad_debt_fund['month'].min() - pd.DateOffset(months=1)).replace(day=15),
         end=bad_debt_fund['month'].max(),
         freq='MS'
     ) + pd.Timedelta(days=1)
+    
 
-    chart = alt.Chart(bad_debt_fund).mark_bar(size=40, color='#26a69a').encode(
+    bad_debt_fund['month_str'] = bad_debt_fund['month'].dt.strftime('%Y-%m')
+    latest_month = bad_debt_fund['month_str'].max()
+    chart = alt.Chart(bad_debt_fund).mark_bar(size=40, color='#15b8a6').encode(
         x=alt.X(
             'month:T',
             title='Month',
@@ -59,6 +60,11 @@ def bad_debt_over_time(bad_debt_inputs, selected_fund):
             scale=alt.Scale(domain=list(all_months))
         ),
         y=alt.Y('bad_debt_ratio_percent:Q', title='Bad Debt Ratio (%)'),
+        color=alt.condition(
+            alt.datum.month_str == latest_month,
+            alt.value('#0e8074'), 
+            alt.value('#109384') 
+        ),
         tooltip=[
             alt.Tooltip('month:T', title='Month', format='%b %Y'),
             alt.Tooltip('bad_debt:Q', title='Bad Debt', format=','),
@@ -68,13 +74,22 @@ def bad_debt_over_time(bad_debt_inputs, selected_fund):
     ).properties(
         width=600
     )
-
-    st.altair_chart(chart, use_container_width=True)
+    labels = chart.mark_text(
+        align='center',
+        baseline='bottom',
+        dy=-5
+    ).encode(
+        text=alt.Text('bad_debt_ratio_percent:Q', format='.2f')
+    )
+    final_chart = (chart + labels)
+    st.altair_chart(final_chart, use_container_width=True)
 
 
 def bad_debt_projection(bad_debt_inputs, selected_fund):
     st.subheader("Bad Debt Projection")
     bad_debt_fund_inputs = bad_debt_inputs[(bad_debt_inputs['fund'] == selected_fund) & (bad_debt_inputs['month'] == datetime.now().strftime('%Y-%m-01'))]
+    bad_debt_fund_inputs['ontime_rent_collections'] = bad_debt_fund_inputs['ontime_rent_collections_succeeded'] + bad_debt_fund_inputs['ontime_rent_collections_processing']
+    bad_debt_fund_inputs['late_rent_collections'] = bad_debt_fund_inputs['late_rent_collections_succeeded'] + bad_debt_fund_inputs['late_rent_collections_processing']
 
     today_ocr = bad_debt_fund_inputs['ontime_rent_collections'].sum() / bad_debt_fund_inputs['rent_charged'].sum()
     today_lcr = 0 if bad_debt_fund_inputs['bom_rent_balance'].sum() == 0 else bad_debt_fund_inputs['late_rent_collections'].sum() / bad_debt_fund_inputs['bom_rent_balance'].sum()
@@ -83,11 +98,11 @@ def bad_debt_projection(bad_debt_inputs, selected_fund):
     col_new, col_ocr = st.columns([0.5, 1])
     with col_ocr:
         selected_ocr = st.slider("Expected Ontime Collections Rate (OCR) %", 
-                                 min_value=int(today_ocr * 100), 
-                                 max_value=100, 
-                                 value=96, 
-                                 step=1, 
-                                 help=f'Minimum value is set to current month\'s LCR: {today_lcr:.1%}')
+                                 min_value=float(round(today_ocr * 100, 4)), 
+                                 max_value=100.0, 
+                                 value=float(max(96, int(today_lcr * 100))), 
+                                 step=1.0, 
+                                 help=f'Minimum value is set to current month\'s OCR: {today_ocr:.2%}')
         expected_ocr = selected_ocr/100
 
     # Old bad debt recovery with LCR slider
@@ -95,11 +110,11 @@ def bad_debt_projection(bad_debt_inputs, selected_fund):
     with col_lcr:
         selected_lcr = st.slider(
             "Expected Late Collections Rate (LCR) %",
-            min_value=int(today_lcr * 100), 
-            max_value=100,
-            value=max(25, int(today_lcr * 100)),
-            step=1, 
-            help=f'Minimum value is set to current month\'s LCR: {today_lcr:.1%}'
+            min_value=float(round(today_lcr * 100, 10)),
+            max_value=100.0,
+            value=float(max(25, int(today_lcr * 100))),
+            step=1.0,
+            help=f'Minimum value is set to current month\'s LCR: {today_lcr:.2%}'
         )
         expected_lcr = selected_lcr/100
         
@@ -157,7 +172,7 @@ Calculated after considering:
     with col_old:
         st.metric(
             label="Projected Old Bad Debt Recovery",
-            value=f"{recovery_pct:.2f}%",
+            value=f"{recovery_pct if round(recovery_pct, 2) != 0 else abs(recovery_pct):.2f}%",
             help="""Amount of existing bad debt we expect to recover as a percentage of rent charged. \n
 Based on:
 - Current late collection progress

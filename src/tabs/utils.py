@@ -17,10 +17,13 @@ def date_month_filter(key):
         key=key
         )
 
-def fund_filter(key, data):
+def fund_filter(key, data, include_all=False):
+    values = sorted(set(data['fund'].unique().tolist()))
+    if include_all:
+        values = ['All'] + values
     return st.selectbox(
         "Select a fund",
-        sorted(set(['All'] + data['fund'].unique().tolist())),
+        values,
         key=key
     )
 
@@ -35,8 +38,8 @@ color_scale = alt.Scale(domain=[
     '#d1c4e9',  # soft lavender (Last Month)
     '#9575cd',  # light-medium purple (Last 3 Months)
     '#512da8',  # deep purple (Last 12 Months)
-    '#26a69a',  # teal (This Month Succeeded)
-    '#26a69a'   # teal (This Month Paid, dotted)
+    '#15b8a6',  # teal (This Month Succeeded)
+    '#15b8a6'   # teal (This Month Paid, dotted)
 ])
 
 dash_scale = alt.Scale(domain=[

@@ -115,7 +115,7 @@ def late_collections_drilldown(bad_debt_inputs, selected_fund):
     display_df['hudson_link'] = "https://hudson.upandup.co/rent-roll/" + display_df['rental_id'].astype(str)
     
     st.dataframe(
-        display_df[['address', 'fund', 'eviction_status', 'bom_rent_balance', 'late_rent_collections_succeeded', 'late_rent_collections_processing', 'unpaid_late_rent_this_month', 'hudson_link']].sort_values(by='unpaid_late_rent_this_month', ascending=False).reset_index(drop=True),
+        display_df[['address', 'fund', 'in_evictions_this_month', 'bom_rent_balance', 'late_rent_collections_succeeded', 'late_rent_collections_processing', 'unpaid_late_rent_this_month', 'hudson_link']].sort_values(by='unpaid_late_rent_this_month', ascending=False).reset_index(drop=True),
         use_container_width=True,
         column_config={
             "hudson_link": st.column_config.LinkColumn(

@@ -34,7 +34,7 @@ def ontime_collections_curve(collections_curve_data, selected_fund):
     st.subheader("On-Time Collections Curve")
 
     chart_df = collections_curve_data[collections_curve_data['fund'] == selected_fund].copy()
-
+    st.dataframe(chart_df)
     # Melt to long format for Altair
     chart_df = chart_df.melt(
         id_vars=['day_of_month', 'rent_charged_this_month', 'rent_paid_ontime_this_month', 'rent_succeeded_ontime_this_month', 'rent_processing_ontime_this_month'],  
@@ -117,13 +117,12 @@ def ontime_collections_drilldown(bad_debt_inputs, selected_fund):
     if selected_fund != 'All':
         display_df = display_df[display_df['fund'] == selected_fund]
     
-    st.dataframe(display_df)
     display_df['unpaid_rent_this_month'] = round(display_df['unpaid_rent_this_month'], 2)
     display_df['hudson_link'] = "https://hudson.upandup.co/rent-roll/" + display_df['rental_id'].astype(str)
     display_df['buildium_link'] = "https://upandup.managebuilding.com/manager/app/rentroll/" + display_df['buildium_lease_id'].astype(str) + "/financials/ledger?isByAccountView=0&isByDateView=1"
     
     st.dataframe(
-        display_df[['address', 'fund', 'eviction_status', 'rent_charged', 'ontime_rent_collections_succeeded', 'ontime_rent_collections_processing', 'unpaid_rent_this_month', 'hudson_link', 'buildium_link']].sort_values(by='unpaid_rent_this_month', ascending=False).reset_index(drop=True),
+        display_df[['address', 'fund', 'in_evictions_this_month', 'rent_charged', 'ontime_rent_collections_succeeded', 'ontime_rent_collections_processing', 'unpaid_rent_this_month', 'hudson_link', 'buildium_link']].sort_values(by='unpaid_rent_this_month', ascending=False).reset_index(drop=True),
         use_container_width=True,
         column_config={
             "hudson_link": st.column_config.LinkColumn(

@@ -7,7 +7,7 @@ from tabs.utils import date_month_filter, fund_filter
 def data_filters(bad_debt_inputs):
     fund, rental_status, eviction_status, month_year, bom_ar = st.columns([2, 1.5, 1.5, 1.5, 1])
     with fund:
-        selected_fund = fund_filter(key='data_select_fund', data=bad_debt_inputs)
+        selected_fund = fund_filter(key='data_select_fund', data=bad_debt_inputs, include_all=True)
     with rental_status: 
         selected_rental_status = st.selectbox(
             "Select a rental status",
