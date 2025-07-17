@@ -7,13 +7,23 @@ from tabs.utils import date_month_filter, fund_filter, color_scale, dash_scale
 
 def ontime_collections_curve_filters(collections_curve_data):
     selected_fund = fund_filter(key='ontime_collections_curve_select_fund', data=collections_curve_data)
-    col_month, col_rent_charged, _ = st.columns([1, 1, 4])
+    col_month, col_rent_charged, col_today_paid, col_today_succeeded, col_today_l1m, col_today_l3m, col_today_l12m = st.columns([1, 1, 1, 1, 1, 1, 1])
 
-    datapoint = collections_curve_data[collections_curve_data['fund'] == selected_fund].sort_values(by='day_of_month').iloc[-1]
+    datapoint = collections_curve_data[(collections_curve_data['fund'] == selected_fund) & (collections_curve_data['day_of_month'] == datetime.now().day)].iloc[0]
     with col_month:
-        st.metric(f"{datetime.now().strftime('%Y')}", f"{datetime.now().strftime('%B')}")
+        st.metric(f"{datetime.now().strftime('%Y')}", f"{datetime.now().strftime('%B %d')}")
     with col_rent_charged:
         st.metric("Rent Charged", f"${datapoint['rent_charged_this_month']:,.0f}")
+    with col_today_paid:
+        st.metric(f"Rent Paid", f"{datapoint['ontime_collections_rate_this_month'] * 100:.2f}%")
+    with col_today_succeeded:
+        st.metric(f"Rent Succeeded", f"{datapoint['ontime_collections_rate_succeeded_this_month'] * 100:.2f}%")
+    with col_today_l1m:
+        st.metric(f"Last Month Paid", f"{datapoint['ontime_collections_rate_last_month'] * 100:.2f}%")
+    with col_today_l3m:
+        st.metric(f"Last 3 Months Paid", f"{datapoint['ontime_collections_rate_l3m'] * 100:.2f}%")
+    with col_today_l12m:
+        st.metric(f"Last 12 Months Paid", f"{datapoint['ontime_collections_rate_l12m'] * 100:.2f}%")
 
     return selected_fund
 
@@ -23,11 +33,11 @@ def ontime_collections_curve_filters(collections_curve_data):
 def ontime_collections_curve(collections_curve_data, selected_fund):
     st.subheader("On-Time Collections Curve")
 
-    display_df = collections_curve_data[collections_curve_data['fund'] == selected_fund].copy()
+    chart_df = collections_curve_data[collections_curve_data['fund'] == selected_fund].copy()
 
     # Melt to long format for Altair
-    chart_df = display_df.melt(
-        id_vars=['day_of_month', 'rent_charged_this_month', 'rent_paid_ontime_this_month', 'rent_succeeded_ontime_this_month'],  
+    chart_df = chart_df.melt(
+        id_vars=['day_of_month', 'rent_charged_this_month', 'rent_paid_ontime_this_month', 'rent_succeeded_ontime_this_month', 'rent_processing_ontime_this_month'],  
         value_vars=[
             'ontime_collections_rate_succeeded_this_month',
             'ontime_collections_rate_this_month',
@@ -89,7 +99,8 @@ def ontime_collections_curve(collections_curve_data, selected_fund):
             'curve', 
             alt.Tooltip('ratio:Q', format='.2%'),
             alt.Tooltip('rent_paid_ontime_this_month:Q', format='$,.0f', title='Rent Paid On Time'),
-            alt.Tooltip('rent_succeeded_ontime_this_month:Q', format='$,.0f', title='Rent Succeeded On Time')
+            alt.Tooltip('rent_succeeded_ontime_this_month:Q', format='$,.0f', title='Rent Succeeded On Time'),
+            alt.Tooltip('rent_processing_ontime_this_month:Q', format='$,.0f', title='Rent Processing On Time')
         ]
     )
 
@@ -106,8 +117,27 @@ def ontime_collections_drilldown(bad_debt_inputs, selected_fund):
     if selected_fund != 'All':
         display_df = display_df[display_df['fund'] == selected_fund]
     
-    display_df['ontime_collections_ratio'] = display_df['ontime_rent_collections'] / display_df['rent_charged']
-    st.dataframe(display_df[['display_month', 'address', 'fund', 'rent_charged', 'ontime_rent_collections', 'ontime_collections_ratio']].reset_index(drop=True), use_container_width=True)
+    st.dataframe(display_df)
+    display_df['unpaid_rent_this_month'] = round(display_df['unpaid_rent_this_month'], 2)
+    display_df['hudson_link'] = "https://hudson.upandup.co/rent-roll/" + display_df['rental_id'].astype(str)
+    display_df['buildium_link'] = "https://upandup.managebuilding.com/manager/app/rentroll/" + display_df['buildium_lease_id'].astype(str) + "/financials/ledger?isByAccountView=0&isByDateView=1"
+    
+    st.dataframe(
+        display_df[['address', 'fund', 'eviction_status', 'rent_charged', 'ontime_rent_collections_succeeded', 'ontime_rent_collections_processing', 'unpaid_rent_this_month', 'hudson_link', 'buildium_link']].sort_values(by='unpaid_rent_this_month', ascending=False).reset_index(drop=True),
+        use_container_width=True,
+        column_config={
+            "hudson_link": st.column_config.LinkColumn(
+                "Hudson Link", 
+                display_text="Hudson",
+                width="small"
+            ), 
+            "buildium_link": st.column_config.LinkColumn(
+                "Buildium Link", 
+                display_text="Buildium",
+                width="small"
+            )
+        }
+    )
 
 
 
