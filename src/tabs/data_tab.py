@@ -84,7 +84,15 @@ def late_collections_over_ar(bad_debt_inputs, selected_month_year):
         'late_rent_collections_processing',
         'total_late_rent_collections',
         'late_collections_ratio'
-    ]], use_container_width=True)
+    ]].rename(columns={
+        'fund': 'Fund',
+        'address': 'Address',
+        'bom_rent_balance': 'BOM AR',
+        'late_rent_collections_succeeded': 'Late Collections (Succeeded)',
+        'late_rent_collections_processing': 'Late Collections (Processing)',
+        'total_late_rent_collections': 'Late Collections (Total)',
+        'late_collections_ratio': 'Late Collections (Total)/BOM AR'
+    }), use_container_width=True)
 
 
 
@@ -120,4 +128,10 @@ def ar_over_gpr(bad_debt_inputs, selected_month_year):
         'bom_rent_balance',
         'gpr_this_month',
         'ar_over_gpr'
-    ]], use_container_width=True)
+    ]].rename(columns={
+        'fund': 'Fund',
+        'address': 'Address',
+        'bom_rent_balance': 'BOM AR',
+        'gpr_this_month': 'GPR',
+        'ar_over_gpr': 'BOM AR/GPR'
+    }), use_container_width=True)

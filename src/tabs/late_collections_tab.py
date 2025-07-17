@@ -113,14 +113,38 @@ def late_collections_drilldown(bad_debt_inputs, selected_fund):
     
     display_df['unpaid_late_rent_this_month'] = round(display_df['bom_rent_balance'] - display_df['late_rent_collections_succeeded'] - display_df['late_rent_collections_processing'], 2)
     display_df['hudson_link'] = "https://hudson.upandup.co/rent-roll/" + display_df['rental_id'].astype(str)
-    
+    display_df['buildium_link'] = "https://upandup.managebuilding.com/manager/app/rentroll/" + display_df['buildium_lease_id'].astype(str) + "/financials/ledger?isByAccountView=0&isByDateView=1"
+
     st.dataframe(
-        display_df[['address', 'fund', 'in_evictions_this_month', 'bom_rent_balance', 'late_rent_collections_succeeded', 'late_rent_collections_processing', 'unpaid_late_rent_this_month', 'hudson_link']].sort_values(by='unpaid_late_rent_this_month', ascending=False).reset_index(drop=True),
+        display_df[[
+            'address', 
+            'fund', 
+            'in_evictions_this_month', 
+            'bom_rent_balance', 
+            'late_rent_collections_succeeded', 
+            'late_rent_collections_processing', 
+            'unpaid_late_rent_this_month', 
+            'hudson_link', 
+            'buildium_link'
+        ]].rename(columns={
+            'address': 'Address',
+            'fund': 'Fund',
+            'in_evictions_this_month': 'In Evictions',
+            'bom_rent_balance': 'BOM AR',
+            'late_rent_collections_succeeded': 'Late Collections (Succeeded)',
+            'late_rent_collections_processing': 'Late Collections (Processing)',
+            'unpaid_late_rent_this_month': 'Unpaid Late Rent', 
+        }).sort_values(by='Unpaid Late Rent', ascending=False).reset_index(drop=True),
         use_container_width=True,
         column_config={
             "hudson_link": st.column_config.LinkColumn(
                 "Hudson Link", 
                 display_text="Hudson",
+                width="small"
+            ), 
+            "buildium_link": st.column_config.LinkColumn(
+                "Buildium Link", 
+                display_text="Buildium",
                 width="small"
             )
         }

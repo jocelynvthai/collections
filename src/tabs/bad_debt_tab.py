@@ -62,8 +62,8 @@ def bad_debt_over_time(bad_debt_inputs, selected_fund):
         y=alt.Y('bad_debt_ratio_percent:Q', title='Bad Debt Ratio (%)'),
         color=alt.condition(
             alt.datum.month_str == latest_month,
-            alt.value('#0e8074'), 
-            alt.value('#109384') 
+            alt.value('#15b8a6'), 
+            alt.value('#0E8074')  
         ),
         tooltip=[
             alt.Tooltip('month:T', title='Month', format='%b %Y'),
