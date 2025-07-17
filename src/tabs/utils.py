@@ -33,13 +33,13 @@ color_scale = alt.Scale(domain=[
     'Last 3 Months',
     'Last 12 Months',
     'This Month Succeeded',
-    'This Month Paid'
+    'This Month Succeeded + Processing'
 ], range=[
     '#d1c4e9',  # soft lavender (Last Month)
     '#9575cd',  # light-medium purple (Last 3 Months)
     '#512da8',  # deep purple (Last 12 Months)
     '#15b8a6',  # teal (This Month Succeeded)
-    '#15b8a6'   # teal (This Month Paid, dotted)
+    '#15b8a6'   # teal (This Month Succeeded + Processing, dotted)
 ])
 
 dash_scale = alt.Scale(domain=[
@@ -47,7 +47,7 @@ dash_scale = alt.Scale(domain=[
     'Last 3 Months',
     'Last 12 Months',
     'This Month Succeeded',
-    'This Month Paid'
+    'This Month Succeeded + Processing'
 ], range=[
     [1,0],      # solid
     [1,0],      # solid

@@ -6,21 +6,19 @@ from tabs.utils import date_month_filter, fund_filter, color_scale, dash_scale
 
 def late_collections_curve_filters(collections_curve_data):
     selected_fund = fund_filter(key='late_collections_curve_select_fund', data=collections_curve_data)
-    col_month, col_num_rentals, col_num_rentals_in_evictions, col_bom_rent_balance, col_today_paid, col_today_succeeded, col_today_l1m, col_today_l3m, col_today_l12m = st.columns([.75, .75, .75, 1, 1, 1, 1, 1, 1])
+    col_month, col_num_rentals_in_evictions, col_bom_rent_balance, col_today_paid, col_today_succeeded, col_today_l1m, col_today_l3m, col_today_l12m = st.columns(8)
 
     datapoint = collections_curve_data[(collections_curve_data['fund'] == selected_fund) & (collections_curve_data['day_of_month'] == datetime.now().day)].iloc[0]
     with col_month:
         st.metric(f"{datetime.now().strftime('%Y')}", f"{datetime.now().strftime('%B')}")
     with col_bom_rent_balance:
         st.metric("BOM AR", f"${datapoint['bom_rent_balance_this_month']:,.0f}")
-    with col_num_rentals:
-        st.metric("🏠", f"{datapoint['homes_with_bom_rent_balance_this_month']:,}")
     with col_num_rentals_in_evictions:
-        st.metric("🏠 in Evictions", f"{datapoint['homes_with_bom_rent_balance_in_evictions_this_month']:,}")
+        st.metric("Eviction/Total 🏠 with AR", f"{datapoint['homes_with_bom_rent_balance_in_evictions_this_month']:,} / {datapoint['homes_with_bom_rent_balance_this_month']:,}")
     with col_today_paid:
-        st.metric("Rent Paid", f"{datapoint['late_collections_rate_this_month'] * 100:.2f}%")
+        st.metric("Paid (Succeeded + Processing)", f"{datapoint['late_collections_rate_this_month'] * 100:.2f}%")
     with col_today_succeeded:
-        st.metric("Rent Succeeded", f"{datapoint['late_collections_rate_succeeded_this_month'] * 100:.2f}%")
+        st.metric("Paid (Succeeded)", f"{datapoint['late_collections_rate_succeeded_this_month'] * 100:.2f}%")
     with col_today_l1m:
         st.metric("Last Month Paid", f"{datapoint['late_collections_rate_last_month'] * 100:.2f}%")
     with col_today_l3m:
@@ -52,14 +50,14 @@ def late_collections_curve(collections_curve_data, selected_fund):
 
     chart_df['curve'] = chart_df['curve'].map({
         'late_collections_rate_succeeded_this_month': 'This Month Succeeded',
-        'late_collections_rate_this_month': 'This Month Paid',
+        'late_collections_rate_this_month': 'This Month Succeeded + Processing',
         'late_collections_rate_last_month': 'Last Month',
         'late_collections_rate_l3m': 'Last 3 Months',
         'late_collections_rate_l12m': 'Last 12 Months'
     })
     chart_df = chart_df[(
-        ((chart_df['curve'].isin(['This Month Succeeded', 'This Month Paid'])) & (chart_df['day_of_month'] <= datetime.today().day)) |
-        (~chart_df['curve'].isin(['This Month Succeeded', 'This Month Paid']))
+        ((chart_df['curve'].isin(['This Month Succeeded', 'This Month Succeeded + Processing'])) & (chart_df['day_of_month'] <= datetime.today().day)) |
+        (~chart_df['curve'].isin(['This Month Succeeded', 'This Month Succeeded + Processing']))
     )]
 
     chart = alt.Chart(chart_df).mark_line().encode(
@@ -73,7 +71,7 @@ def late_collections_curve(collections_curve_data, selected_fund):
             'curve:N',
             title='Curve',
             scale=color_scale,
-            legend=alt.Legend(orient='right')
+            legend=alt.Legend(orient='bottom-right', labelLimit=210)
         ),
         strokeDash=alt.StrokeDash('curve:N', scale=dash_scale),
         tooltip=['day_of_month', 'curve', alt.Tooltip('ratio:Q', format='.2%')]
@@ -81,8 +79,8 @@ def late_collections_curve(collections_curve_data, selected_fund):
         width='container'
     ).interactive()
 
-    # Add points only for "This Month Succeeded" and "This Month Paid"
-    point_chart = alt.Chart(chart_df[chart_df['curve'].isin(['This Month Succeeded', 'This Month Paid'])]).mark_point(
+    # Add points only for "This Month (Succeeded)" and "This Month (Succeeded + Processing)"
+    point_chart = alt.Chart(chart_df[chart_df['curve'].isin(['This Month Succeeded', 'This Month Succeeded + Processing'])]).mark_point(
         filled=True,
         size=60
     ).encode(

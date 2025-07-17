@@ -15,6 +15,16 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+st.markdown("""
+    <style>
+    [data-testid="stMetricLabel"] div {
+        font-size: .7rem !important;
+    }
+    [data-testid="stMetricValue"] div {
+        font-size: 1.5rem !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 # Authenticate
 credentials = service_account.Credentials.from_service_account_info(
     st.secrets["gcp_service_account"]
