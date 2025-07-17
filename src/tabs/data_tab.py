@@ -99,7 +99,7 @@ def late_collections_over_ar(bad_debt_inputs, selected_month_year):
 def ar_over_gpr(bad_debt_inputs, selected_month_year):
     st.subheader("BOM AR over GPR")
 
-    bad_debt_inputs = bad_debt_inputs[bad_debt_inputs['bom_rent_balance'] > 0]
+    bad_debt_inputs = bad_debt_inputs[bad_debt_inputs['bom_rent_balance'] >= 0]
 
     # Graph the past 12 months
     monthly_summary = bad_debt_inputs.groupby('month').agg({
@@ -121,7 +121,7 @@ def ar_over_gpr(bad_debt_inputs, selected_month_year):
     bad_debt_inputs['ar_over_gpr'] = round(
         bad_debt_inputs['bom_rent_balance'] / bad_debt_inputs['gpr_this_month'], 2
     )
-    display_df = bad_debt_inputs[bad_debt_inputs['display_month'] == selected_month_year].sort_values(by='bom_rent_balance', ascending=False).reset_index(drop=True)
+    display_df = bad_debt_inputs[(bad_debt_inputs['display_month'] == selected_month_year) & (bad_debt_inputs['bom_rent_balance'] > 0)].sort_values(by='bom_rent_balance', ascending=False).reset_index(drop=True)
     st.dataframe(display_df[[
         'fund',
         'address',
