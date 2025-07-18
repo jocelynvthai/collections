@@ -97,14 +97,14 @@ def late_collections_curve(collections_curve_data, selected_fund):
         ]
     )
     
-    st.altair_chart(chart + point_chart, use_container_width=True)
+    st.altair_chart(chart + point_chart)
 
-def late_collections_drilldown(bad_debt_inputs, selected_fund):
+def late_collections_drilldown(bad_debt_inputs_data, selected_fund):
     st.subheader("Late Collections Drilldown")
     
     selected_month_year = date_month_filter(key='late_collections_select_month_year')
 
-    display_df = bad_debt_inputs[(bad_debt_inputs['bom_rent_balance'] > 0)]
+    display_df = bad_debt_inputs_data[(bad_debt_inputs_data['bom_rent_balance'] > 0)]
     display_df = display_df[(display_df['display_month'] == selected_month_year)]
     if selected_fund != 'All':
         display_df = display_df[display_df['fund'] == selected_fund]
@@ -133,7 +133,6 @@ def late_collections_drilldown(bad_debt_inputs, selected_fund):
             'late_rent_collections_processing': 'Late Collections (Processing)',
             'unpaid_late_rent_this_month': 'Unpaid Late Rent', 
         }).sort_values(by='Unpaid Late Rent', ascending=False).reset_index(drop=True),
-        use_container_width=True,
         column_config={
             "hudson_link": st.column_config.LinkColumn(
                 "Hudson Link", 

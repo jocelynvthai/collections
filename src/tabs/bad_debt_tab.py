@@ -82,7 +82,7 @@ def bad_debt_over_time(bad_debt_inputs, selected_fund):
         text=alt.Text('bad_debt_ratio_percent:Q', format='.2f')
     )
     final_chart = (chart + labels)
-    st.altair_chart(final_chart, use_container_width=True)
+    st.altair_chart(final_chart)
 
 
 def bad_debt_projection(bad_debt_inputs, selected_fund):

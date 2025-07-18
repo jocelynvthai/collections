@@ -4,10 +4,10 @@ import altair as alt
 from tabs.utils import date_month_filter, fund_filter
 
 
-def data_filters(bad_debt_inputs):
+def data_filters(bad_debt_inputs_data):
     fund, rental_status, eviction_status, month_year, bom_ar = st.columns([2, 1.5, 1.5, 1.5, 1])
     with fund:
-        selected_fund = fund_filter(key='data_select_fund', data=bad_debt_inputs, include_all=True)
+        selected_fund = fund_filter(key='data_select_fund', data=bad_debt_inputs_data, include_all=True)
     with rental_status: 
         selected_rental_status = st.selectbox(
             "Select a rental status",
@@ -23,7 +23,7 @@ def data_filters(bad_debt_inputs):
     with month_year:
         selected_month_year = date_month_filter(key='data_select_month_year')
     
-    filtered_bad_debt_inputs = bad_debt_inputs.copy()
+    filtered_bad_debt_inputs = bad_debt_inputs_data.copy()
     if selected_fund != 'All':
         filtered_bad_debt_inputs = filtered_bad_debt_inputs[filtered_bad_debt_inputs['fund'] == selected_fund]
 
@@ -43,14 +43,14 @@ def data_filters(bad_debt_inputs):
     return filtered_bad_debt_inputs, selected_month_year
     
 
-def late_collections_over_ar(bad_debt_inputs, selected_month_year):
+def late_collections_over_ar(bad_debt_inputs_data, selected_month_year):
     st.subheader("Late Collections over BOM AR")
 
-    bad_debt_inputs = bad_debt_inputs[bad_debt_inputs['bom_rent_balance'] > 0]
-    bad_debt_inputs['total_late_rent_collections'] = bad_debt_inputs['late_rent_collections_succeeded'] + bad_debt_inputs['late_rent_collections_processing']
+    bad_debt_inputs_data = bad_debt_inputs_data[bad_debt_inputs_data['bom_rent_balance'] > 0]
+    bad_debt_inputs_data['total_late_rent_collections'] = bad_debt_inputs_data['late_rent_collections_succeeded'] + bad_debt_inputs_data['late_rent_collections_processing']
 
     # Graph the past 12 months
-    monthly_summary = bad_debt_inputs.groupby('month').agg({
+    monthly_summary = bad_debt_inputs_data.groupby('month').agg({
         'total_late_rent_collections': 'sum',
         'bom_rent_balance': 'sum'
     }).reset_index()
@@ -69,13 +69,13 @@ def late_collections_over_ar(bad_debt_inputs, selected_month_year):
             alt.Tooltip('late_collections_ratio:Q', title='Late Collections Ratio', format='.1%')
         ]
     )
-    st.altair_chart(chart, use_container_width=True)
+    st.altair_chart(chart)
 
     # Table for selected month
-    bad_debt_inputs['late_collections_ratio'] = round(
-        bad_debt_inputs['total_late_rent_collections'] / bad_debt_inputs['bom_rent_balance'], 2
+    bad_debt_inputs_data['late_collections_ratio'] = round(
+        bad_debt_inputs_data['total_late_rent_collections'] / bad_debt_inputs_data['bom_rent_balance'], 2
     )
-    display_df = bad_debt_inputs[bad_debt_inputs['display_month'] == selected_month_year].sort_values(by='total_late_rent_collections', ascending=False).reset_index(drop=True)
+    display_df = bad_debt_inputs_data[bad_debt_inputs_data['display_month'] == selected_month_year].sort_values(by='total_late_rent_collections', ascending=False).reset_index(drop=True)
     st.dataframe(display_df[[
         'fund',
         'address',
@@ -92,17 +92,17 @@ def late_collections_over_ar(bad_debt_inputs, selected_month_year):
         'late_rent_collections_processing': 'Late Collections (Processing)',
         'total_late_rent_collections': 'Late Collections (Total)',
         'late_collections_ratio': 'Late Collections (Total)/BOM AR'
-    }), use_container_width=True)
+    }))
 
 
 
-def ar_over_gpr(bad_debt_inputs, selected_month_year):
+def ar_over_gpr(bad_debt_inputs_data, selected_month_year):
     st.subheader("BOM AR over GPR")
 
-    bad_debt_inputs = bad_debt_inputs[bad_debt_inputs['bom_rent_balance'] >= 0]
+    bad_debt_inputs_data = bad_debt_inputs_data[bad_debt_inputs_data['bom_rent_balance'] >= 0]
 
     # Graph the past 12 months
-    monthly_summary = bad_debt_inputs.groupby('month').agg({
+    monthly_summary = bad_debt_inputs_data.groupby('month').agg({
         'bom_rent_balance': 'sum',
         'gpr_this_month': 'sum'
     }).reset_index()
@@ -115,13 +115,13 @@ def ar_over_gpr(bad_debt_inputs, selected_month_year):
         axis=alt.Axis(format='.1%')), 
         color=alt.value('#15b8a6')
     )
-    st.altair_chart(chart, use_container_width=True)
+    st.altair_chart(chart)
 
      # Table for selected month
-    bad_debt_inputs['ar_over_gpr'] = round(
-        bad_debt_inputs['bom_rent_balance'] / bad_debt_inputs['gpr_this_month'], 2
+    bad_debt_inputs_data['ar_over_gpr'] = round(
+        bad_debt_inputs_data['bom_rent_balance'] / bad_debt_inputs_data['gpr_this_month'], 2
     )
-    display_df = bad_debt_inputs[(bad_debt_inputs['display_month'] == selected_month_year) & (bad_debt_inputs['bom_rent_balance'] > 0)].sort_values(by='bom_rent_balance', ascending=False).reset_index(drop=True)
+    display_df = bad_debt_inputs_data[(bad_debt_inputs_data['display_month'] == selected_month_year) & (bad_debt_inputs_data['bom_rent_balance'] > 0)].sort_values(by='bom_rent_balance', ascending=False).reset_index(drop=True)
     st.dataframe(display_df[[
         'fund',
         'address',
@@ -134,4 +134,4 @@ def ar_over_gpr(bad_debt_inputs, selected_month_year):
         'bom_rent_balance': 'BOM AR',
         'gpr_this_month': 'GPR',
         'ar_over_gpr': 'BOM AR/GPR'
-    }), use_container_width=True)
+    }))
