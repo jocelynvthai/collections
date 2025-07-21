@@ -8,11 +8,11 @@ WORKDIR /app
 COPY requirements.txt .
 COPY .streamlit/ ./.streamlit/
 
-# Copy only this app's code
+# Copy only the collections app's code
 COPY apps/collections/ .
 
 # Install dependencies
 RUN pip install -r requirements.txt
 
-# Run the main app (collections by default)
-CMD streamlit run apps/collections/app.py --server.port=8080 --server.address=0.0.0.0
+# Run the main app 
+CMD streamlit run app.py --server.port=8080 --server.address=0.0.0.0
