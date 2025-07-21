@@ -1,5 +1,5 @@
 import streamlit as st
-import pandas as pd
+import json
 from google.oauth2 import service_account
 
 from tabs.data import get_bad_debt_inputs_data, get_collections_curve_data, get_evictions_data
@@ -27,9 +27,11 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
-# Authenticate
+
+with open('/gcp_service_account/secret', 'r') as f:
+    service_account_info = json.load(f)
 credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"]
+    service_account_info
 )
 
 bad_debt_inputs_data = get_bad_debt_inputs_data(credentials)
