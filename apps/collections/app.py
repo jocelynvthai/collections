@@ -28,7 +28,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-with open('/gcp_service_account/secret', 'r') as f:
+with open('/gcp_service_account/GCLOUD_SERVICE_ACCOUNT', 'r') as f:
     service_account_info = json.load(f)
 credentials = service_account.Credentials.from_service_account_info(
     service_account_info
