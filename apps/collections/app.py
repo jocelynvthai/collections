@@ -1,8 +1,7 @@
 import streamlit as st
-import json
 from google.oauth2 import service_account
 
-from tabs.data import get_bad_debt_inputs_data, get_collections_curve_data, get_evictions_data
+from tabs.data import get_service_account_info, get_bad_debt_inputs_data, get_collections_curve_data, get_evictions_data
 from tabs.data_tab import data_filters, late_collections_over_ar, ar_over_gpr
 from tabs.ontime_collections_tab import ontime_collections_curve_filters, ontime_collections_curve, ontime_collections_drilldown
 from tabs.late_collections_tab import late_collections_curve_filters, late_collections_curve, late_collections_drilldown
@@ -28,10 +27,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-with open('/gcp_service_account/GCLOUD_SERVICE_ACCOUNT', 'r') as f:
-    service_account_info = json.load(f)
 credentials = service_account.Credentials.from_service_account_info(
-    service_account_info
+    get_service_account_info(local=True)
 )
 
 bad_debt_inputs_data = get_bad_debt_inputs_data(credentials)

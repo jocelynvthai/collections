@@ -24,11 +24,8 @@ def ontime_collections_curve_filters(collections_curve_data):
         st.metric(f"Last 3 Months Paid", f"{datapoint['ontime_collections_rate_l3m'] * 100:.2f}%")
     with col_today_l12m:
         st.metric(f"Last 12 Months Paid", f"{datapoint['ontime_collections_rate_l12m'] * 100:.2f}%")
-
     return selected_fund
 
-
-    
 
 def ontime_collections_curve(collections_curve_data, selected_fund):
     st.subheader("On-Time Collections Curve")
@@ -102,7 +99,6 @@ def ontime_collections_curve(collections_curve_data, selected_fund):
             alt.Tooltip('rent_processing_ontime_this_month:Q', format='$,.0f', title='Rent Processing On Time')
         ]
     )
-
     st.altair_chart(chart + point_chart)
 
 
