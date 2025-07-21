@@ -15,6 +15,7 @@ def evictions(evictions_data):
 
         display_df = fund_evictions_data[fund_evictions_data['status'] == status]
         display_df['rental_link'] = "https://hudson.upandup.co/rent-roll/" + display_df['rental_id'].astype(str)
+            
         display_df = display_df[[ 
             'rental_link', 
             'address',
@@ -58,8 +59,20 @@ def evictions(evictions_data):
             'notes': 'Notes'
         })
 
-        st.dataframe(display_df.sort_values(by='Updated At', ascending=False)
-                     .reset_index(drop=True), 
+        
+        datetime_columns = [col for col in display_df.columns if col.endswith(' At')]
+        for col in datetime_columns:
+            display_df[col] = display_df[col].dt.strftime('%Y-%m-%d %I:%M%p')
+
+        def color_status(val):
+            colors = {
+                'pending': 'color: #FF9966', 
+                'completed': 'color: #E77C8E',
+                'canceled': 'color: #A9A9A9' 
+            }
+            return colors.get(val.lower(), '')
+        styled_df = display_df.sort_values(by='Updated At', ascending=False).reset_index(drop=True).style.applymap(color_status, subset=['Status'])
+        st.dataframe(styled_df, 
                      column_config={
                         'rental_link': st.column_config.LinkColumn(
                             label='Rental', 
@@ -67,3 +80,5 @@ def evictions(evictions_data):
                             width="small"
                         )
                      })
+
+        
