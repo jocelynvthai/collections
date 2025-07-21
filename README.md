@@ -11,100 +11,17 @@ A collection of Streamlit dashboards for Up & Up, built with Python and Streamli
 ## Setup
 
 1. Clone the repository:
-
    ```bash
    git clone <repository-url>
    cd upandup-dashboards
    ```
-
 2. Install dependencies using Poetry:
-
    ```bash
    poetry install
    ```
-
 3. Configure secrets:
    - Create a `.streamlit/secrets.toml` file
-   - Add your configuration secrets (e.g., API keys, database credentials)
-   ```toml
-   # Example secrets.toml structure
-   [gcp_service_account]
-   type = "service_account"
-   project_id = "your-project-id"
-   # Add other required credentials
-   ```
-
-## Adding Dependencies
-
-To add new dependencies to your project:
-
-```bash
-poetry add <package-name>
-```
-
-For example:
-
-```bash
-poetry add pandas
-poetry add streamlit
-poetry add google-cloud-bigquery
-```
-
-For development dependencies, add the `--dev` flag:
-
-```bash
-poetry add --dev pytest
-```
-
-After adding new dependencies, update the requirements.txt file:
-
-```bash
-poetry export -f requirements.txt --output requirements.txt --without-hashes
-```
-
-This command will create/update requirements.txt with all your project dependencies, making it easier to install dependencies in environments where Poetry isn't available.
-
-## Running the App
-
-1. Activate the Poetry shell (optional but recommended):
-
-   ```bash
-   poetry shell
-   ```
-
-2. Run a specific dashboard using Streamlit:
-
-   ```bash
-   poetry run streamlit run apps/collections/app.py
-   ```
-
-   Or if you're in Poetry shell:
-
-   ```bash
-   streamlit run apps/<DASHBOARD_NAME>/app.py
-   ```
-
-3. The app will open automatically in your default web browser. By default, Streamlit runs on:
-   - Local URL: http://localhost:8501
-   - Network URL: http://192.168.x.x:8501
-
-## Deployment to Streamlit Cloud
-
-1. Create a Streamlit Cloud account at [streamlit.io](https://streamlit.io)
-
-2. Deploy your app:
-
-   - Click "Create app" in the Streamlit Cloud dashboard (top right corner)
-   - Choose "Deploy a public app from GitHub"
-   - Select your repository and branch
-   - Set the main file path: `apps/<DASHBOARD_NAME>/app.py`
-   - Click "Deploy"
-
-3. Configure secrets in Streamlit Cloud:
-   - In your deployed app, click the three dots (⋮) menu
-   - Select "Settings"
-   - Navigate to "Secrets"
-   - Paste your secrets in TOML format:
+   - Add your configuration secrets (see the [Streamlit BigQuery Tutorial](https://docs.streamlit.io/develop/tutorials/databases/bigquery))
      ```toml
      [gcp_service_account]
      type = "service_account"
@@ -119,6 +36,96 @@ This command will create/update requirements.txt with all your project dependenc
      client_x509_cert_url = "your-cert-url"
      ```
 
-Note: Make sure your repository is public or you have connected your GitHub account with Streamlit Cloud. Never commit secrets directly to your repository - always use Streamlit's secrets management system.
+## Adding Dependencies
 
-For more detailed instructions on BigQuery integration, see the [Streamlit BigQuery Tutorial](https://docs.streamlit.io/develop/tutorials/databases/bigquery).
+To add new dependencies to your project:
+
+```bash
+poetry add <package-name>
+```
+
+After adding new dependencies, update the requirements.txt file:
+
+```bash
+poetry export -f requirements.txt --output requirements.txt --without-hashes --only main
+```
+
+## Running the App Locally
+
+Option 1:
+
+- Activate the Poetry shell (optional but recommended):
+  ```bash
+  poetry shell
+  ```
+- Run the app in the poetry shell
+
+  ```bash
+  streamlit run apps/your_dashboard_name/app.py
+  ```
+
+  Option 2:
+
+- Without poetry shell
+  ```bash
+  poetry run streamlit run apps/your_dashboard_name/app.py
+  ```
+
+The app will open automatically in your default web browser. By default, Streamlit runs on:
+
+- Local URL: http://localhost:8501
+- Network URL: http://192.168.x.x:8501
+
+## Deployment to Streamlit Cloud
+
+1. Create a Streamlit Cloud account at [streamlit.io](https://streamlit.io)
+2. Deploy your app:
+   - Click "Create app" in the Streamlit Cloud dashboard (top right corner)
+   - Choose "Deploy a public app from GitHub"
+   - Select your repository and branch
+   - Set the main file path: `apps/your_dashboard_name/app.py`
+   - Click "Deploy"
+3. Configure secrets in Streamlit Cloud:
+   - In your deployed app, click the three dots (⋮) menu
+   - Select "Settings"
+   - Navigate to "Secrets"
+   - Paste your secrets in TOML format:
+
+## Deployment with Google Cloud Run
+
+1. Create a Docker file with name your_dashboard_name.Dockerfile in the root with the following contents:
+
+   ```
+   # Use Python 3.11 slim image
+   FROM python:3.11-slim
+
+   # Set working directory
+   WORKDIR /app
+
+   # Copy requirements and config
+   COPY requirements.txt .
+   COPY .streamlit/ ./.streamlit/
+
+   # Copy only the collections app's code
+   COPY apps/your_dashboard_name/ .
+
+   # Install dependencies
+   RUN pip install -r requirements.txt
+
+   # Run the main app
+   CMD streamlit run app.py --server.port=8080 --server.address=0.0.0.0
+   ```
+
+2. Create a new directory in the apps folder called your_dashboard_name
+3. Create an app.py file that contains the master code for the dashboard
+4. Deploy container at [Google Cloud Run](https://cloud.google.com/run) using a Github Repository
+
+   a. Set up with Cloud Build: authenticate Github select the Build Type as Dockerfile with the source location set to "/your_dashboard_name/Dockerfile
+
+   b. Choose a service name (typically upandup-your_dashboard_name)
+
+   c. Set Authentication as "Allow unauthenticated invocations"
+
+   d. Create Volume and Volume Mounts if app requires credential secrets (ex. google cloud service account to access BigQuery)
+
+   e. Create
