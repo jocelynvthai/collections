@@ -1,4 +1,4 @@
-# Up & Up Streamlit Dashboards
+# Up&Up Streamlit Dashboards
 
 A collection of Streamlit dashboards for Up & Up, built with Python and Streamlit. This project uses Poetry for dependency management and includes various data analysis tools powered by pandas and Google BigQuery.
 
