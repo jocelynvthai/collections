@@ -28,7 +28,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 credentials = service_account.Credentials.from_service_account_info(
-    get_service_account_info()
+    get_service_account_info(local=True)
 )
 
 bad_debt_inputs_data = get_bad_debt_inputs_data(credentials)
@@ -36,11 +36,7 @@ collections_curve_data = get_collections_curve_data(credentials)
 evictions_data = get_evictions_data(credentials)
 
 st.title("Collections Dashboard")
-data_tab, ontime_collections_tab, late_collections_tab, bad_debt_tab, evictions_tab = st.tabs(["Data", "On-Time Collections", "Late Collections", "Bad Debt", "Evictions"])
-with data_tab:
-    filtered_bad_debt_inputs, selected_month_year = data_filters(bad_debt_inputs_data)
-    late_collections_over_ar(filtered_bad_debt_inputs, selected_month_year)
-    ar_over_gpr(filtered_bad_debt_inputs, selected_month_year)
+ontime_collections_tab, late_collections_tab, bad_debt_tab, evictions_tab, data_tab = st.tabs(["On-Time Collections", "Late Collections", "Bad Debt", "Evictions", "Data"])
 
 with ontime_collections_tab:
     ontime_collections_selected_fund = ontime_collections_curve_filters(collections_curve_data)
@@ -59,5 +55,10 @@ with bad_debt_tab:
 
 with evictions_tab:
     evictions(evictions_data)
+
+with data_tab:
+    filtered_bad_debt_inputs, selected_month_year = data_filters(bad_debt_inputs_data)
+    late_collections_over_ar(filtered_bad_debt_inputs, selected_month_year)
+    ar_over_gpr(filtered_bad_debt_inputs, selected_month_year)
 
 
