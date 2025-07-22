@@ -36,6 +36,30 @@ A collection of Streamlit dashboards for Up & Up, built with Python and Streamli
      client_x509_cert_url = "your-cert-url"
      ```
 
+## Project Structure
+
+```
+├── poetry.lock
+├── pyproject.toml
+├── requirements.txt
+├── .streamlit
+    ├── config.toml
+    └── secrets.toml  <- add BigQuery secret here
+├── README.md
+└── apps
+    ├── your_dashboard_name  <- copy this folder and use as skeleton
+    │   ├── app.py
+    │   └── data.py
+    ├── dashboard_1
+    │   ├── app.py
+    │   └── data.py
+    └── dashboard_2
+    │   ├── app.py
+    │   └── data.py
+```
+
+- In the `apps` directory, there is a folder called `your_dashboard_name`. This will give you skeleton code on creating your own streamlit dashboard (connecting to BigQuery, querying data, etc. )
+
 ## Adding Dependencies
 
 To add new dependencies to your project:
@@ -44,7 +68,7 @@ To add new dependencies to your project:
 poetry add <package-name>
 ```
 
-After adding new dependencies, update the requirements.txt file:
+After adding new dependencies, update the `requirements.txt` file:
 
 ```bash
 poetry export -f requirements.txt --output requirements.txt --without-hashes --only main
@@ -58,6 +82,9 @@ Option 1:
   ```bash
   poetry shell
   ```
+
+````
+
 - Run the app in the poetry shell
 
   ```bash
@@ -93,7 +120,7 @@ The app will open automatically in your default web browser. By default, Streaml
 
 ## Deployment with Google Cloud Run
 
-1. Create a Docker file with name your_dashboard_name.Dockerfile in the root with the following contents:
+1. Create a Docker file with name `your_dashboard_name.Dockerfile` in the root with the following contents:
 
    ```
    # Use Python 3.11 slim image
@@ -116,8 +143,8 @@ The app will open automatically in your default web browser. By default, Streaml
    CMD streamlit run app.py --server.port=8080 --server.address=0.0.0.0
    ```
 
-2. Create a new directory in the apps folder called your_dashboard_name
-3. Create an app.py file that contains the master code for the dashboard
+2. Create a new directory in the apps folder called `your_dashboard_name`
+3. Create an `app.py` file that contains the master code for the dashboard
 4. Deploy container at [Google Cloud Run](https://cloud.google.com/run) using a Github Repository
 
    a. Set up with Cloud Build: authenticate Github select the Build Type as Dockerfile with the source location set to "/your_dashboard_name/Dockerfile
@@ -129,3 +156,4 @@ The app will open automatically in your default web browser. By default, Streaml
    d. Create Volume and Volume Mounts if app requires credential secrets (ex. google cloud service account to access BigQuery)
 
    e. Create
+````
