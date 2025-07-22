@@ -28,7 +28,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 credentials = service_account.Credentials.from_service_account_info(
-    get_service_account_info(local=True)
+    get_service_account_info()
 )
 
 bad_debt_inputs_data = get_bad_debt_inputs_data(credentials)
