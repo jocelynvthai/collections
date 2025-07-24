@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # Data Retrieval
-credentials = service_account.Credentials.from_service_account_info(get_service_account_info(local=True))
+credentials = service_account.Credentials.from_service_account_info(get_service_account_info())
 ih_property_df, ih_lease_terms_df = get_invitation_homes_data(credentials)
 ih_property_cycle_df = get_market_cycle_data(ih_property_df)
 
