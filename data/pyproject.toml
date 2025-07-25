@@ -1,0 +1,36 @@
+[project]
+name = "data-exploring"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "bs4 (>=0.0.2,<0.0.3)",
+    "requests (>=2.32.4,<3.0.0)",
+    "google-cloud-bigquery (>=3.35.1,<4.0.0)",
+    "selenium (>=4.34.2,<5.0.0)",
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+packages = [
+    {include = "amh", from = "src"},
+    {include = "invh", from = "src"},
+    {include = "progress", from = "src"}
+]
+
+[tool.poetry.scripts]
+amh = "amh.amh:main"
+invh = "invh.invh:main"
+progress = "progress.progress:main"
+amh-local = "amh.amh_local:main"
+invh-local = "invh.invh_local:main"
+progress-local = "progress.progress_local:main"
+progress-og = "progress.progress_og:main"
+

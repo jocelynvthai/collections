@@ -1,0 +1,202 @@
+{
+  "address": {
+    "address_1": "1117 Sheldon Dr",
+    "city": "Anna",
+    "state": "TX",
+    "zip_code": "75409"
+  },
+  "application_url": "https://www.invitationhomes.com/lease?property=1117-sheldon-dr-75409-113552",
+  "available_on": "2025-08-06T00:00:00.000Z",
+  "baths": 2,
+  "beds": 4,
+  "has_virtual_tour": false,
+  "is_application_enabled": true,
+  "is_btr_community": false,
+  "is_exclusive": false,
+  "is_featured_listing": false,
+  "is_model_home": false,
+  "is_new_construction": false,
+  "is_on_special": false,
+  "is_self_show_enabled": true,
+  "map_location": { "latitude": 33.35451399598, "longitude": -96.561254019179 },
+  "market_name": "Dallas",
+  "photos": [
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/front-view-z0apmihvhmybrf5pu77lf.jpg",
+      "is_primary": true,
+      "sequence": 1,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/front-view-z0apmihvhmybrf5pu77lf.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/front-view-buhgmdou0zp3puu3gz38d.jpg",
+      "is_primary": false,
+      "sequence": 2,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/front-view-buhgmdou0zp3puu3gz38d.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/living-room-evixqan_rehkohb81luhg.jpg",
+      "is_primary": false,
+      "sequence": 3,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/living-room-evixqan_rehkohb81luhg.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/living-room-zphn8ggiwlqmqni8fv9lp.jpg",
+      "is_primary": false,
+      "sequence": 4,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/living-room-zphn8ggiwlqmqni8fv9lp.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/living-room-q3fi9hdmrdcj9tfaxwzfg.jpg",
+      "is_primary": false,
+      "sequence": 5,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/living-room-q3fi9hdmrdcj9tfaxwzfg.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/breakfast-nook-a1hi2_xkkq9arvj2has1f.jpg",
+      "is_primary": false,
+      "sequence": 6,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/breakfast-nook-a1hi2_xkkq9arvj2has1f.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/kitchen-allbfkn7c83pw_shbgsc4.jpg",
+      "is_primary": false,
+      "sequence": 7,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/kitchen-allbfkn7c83pw_shbgsc4.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/dining-room-oujdlojfdnutp__pvgxzk.jpg",
+      "is_primary": false,
+      "sequence": 8,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/dining-room-oujdlojfdnutp__pvgxzk.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/main-bedroom-ti_jtsayhaavtqzbmehzh.jpg",
+      "is_primary": false,
+      "sequence": 9,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/main-bedroom-ti_jtsayhaavtqzbmehzh.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/main-bedroom-dnerxjm6iztyeduqhbxwg.jpg",
+      "is_primary": false,
+      "sequence": 10,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/main-bedroom-dnerxjm6iztyeduqhbxwg.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/bedroom-gzisue9zbn-rhil-gnl_c.jpg",
+      "is_primary": false,
+      "sequence": 11,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/bedroom-gzisue9zbn-rhil-gnl_c.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/bedroom-wqmp0ojnoa9q4w-yorixg.jpg",
+      "is_primary": false,
+      "sequence": 12,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/bedroom-wqmp0ojnoa9q4w-yorixg.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/bedroom-15v1rfdcl1fb57lrb1zce.jpg",
+      "is_primary": false,
+      "sequence": 13,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/bedroom-15v1rfdcl1fb57lrb1zce.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/main-bathroom-hl-7ye5tgftrq-znm3ozk.jpg",
+      "is_primary": false,
+      "sequence": 14,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/main-bathroom-hl-7ye5tgftrq-znm3ozk.jpg"
+    },
+    {
+      "image_url": "https://images.invitationhomes.com/web/w_1500,h_1000,c_limit,q_auto/1117-sheldon-dr-75409-113552/rear-view-tya21fzfj8dpqfxharowg.jpg",
+      "is_primary": false,
+      "sequence": 15,
+      "thumbnail_url": "https://images.invitationhomes.com/web/w_500,h_250,c_limit,q_auto/1117-sheldon-dr-75409-113552/rear-view-tya21fzfj8dpqfxharowg.jpg"
+    }
+  ],
+  "property_id": "nu002102",
+  "pull_timestamp": "2025-07-22T11:53:38.683010",
+  "rent": "2249.00",
+  "slug": "1117-sheldon-dr-75409-113552",
+  "square_footage": 2113,
+  "status": "Notice Unrented",
+  "terms": [
+    {
+      "is_optimal_term": true,
+      "rent": "2249.00",
+      "term": 12,
+      "total_monthly_rent": "2393.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2375.00",
+      "term": 13,
+      "total_monthly_rent": "2519.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2365.00",
+      "term": 14,
+      "total_monthly_rent": "2509.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2340.00",
+      "term": 15,
+      "total_monthly_rent": "2484.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2265.00",
+      "term": 16,
+      "total_monthly_rent": "2409.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2249.00",
+      "term": 17,
+      "total_monthly_rent": "2393.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2260.00",
+      "term": 18,
+      "total_monthly_rent": "2404.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2410.00",
+      "term": 19,
+      "total_monthly_rent": "2554.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2470.00",
+      "term": 20,
+      "total_monthly_rent": "2614.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2475.00",
+      "term": 21,
+      "total_monthly_rent": "2619.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2449.00",
+      "term": 22,
+      "total_monthly_rent": "2593.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2425.00",
+      "term": 23,
+      "total_monthly_rent": "2569.90"
+    },
+    {
+      "is_optimal_term": false,
+      "rent": "2295.00",
+      "term": 24,
+      "total_monthly_rent": "2439.90"
+    }
+  ],
+  "total_monthly_rent": "2393.90"
+}
